@@ -1,0 +1,50 @@
+---
+provider:
+  type: chameleonbaremetal
+  key_name: 'my-ssh-key'
+  lease_name: 'enos-lease'
+  walltime: '24:00:00'
+  gateway: True
+  network:
+    name: 'sharednet1'
+  subnet:
+    name: 'shared-subnet1'
+resources:
+  compute:
+    control: 1
+    network: 1
+    compute: 1
+
+
+# ############################################### #
+# Inventory to use                                #
+# ############################################### #
+
+# This will describe the topology of your services
+inventory: inventories/inventory.pbse
+
+# ############################################### #
+# docker registry parameters
+# ############################################### #
+registry:
+  ceph: False
+
+# ############################################### #
+# Enos Customizations                             #
+# ############################################### #
+enable_monitoring: no
+
+
+# ############################################### #
+# Kolla parameters                                #
+# ############################################### #
+# Repository
+kolla_repo: "https://git.openstack.org/openstack/kolla-ansible"
+kolla_ref: "stable/ocata"
+
+# Vars : globals.yml
+kolla:
+  kolla_base_distro: "centos"
+  kolla_install_type: "source"
+  docker_namespace: "beyondtheclouds"
+  enable_heat: "no"

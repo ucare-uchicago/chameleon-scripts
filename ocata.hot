@@ -148,7 +148,7 @@ resources:
                 # Launch a simple webserver on port 6464. Slaves will check this
                 # port: if it listening, they will start to run their slave.sh
                 # script.
-                # screen -dm bash -c "python -m SimpleHTTPServer 6464"
+                screen -dm bash -c "python -m SimpleHTTPServer 6464"
                 source openrc admin
                 # Configure DNS server
                 neutron subnet-update public-subnet --dns_nameservers list=true 8.8.8.8

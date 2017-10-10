@@ -128,7 +128,7 @@ resources:
                 Q_AGENT=linuxbridge
 
                 [[post-config|\$NEUTRON_CONF]]
-                [default]
+                [DEFAULT]
                 dns_domain=ucare.edu.
 
                 [[post-config|/\$Q_PLUGIN_CONF_FILE]]

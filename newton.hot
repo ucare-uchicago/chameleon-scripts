@@ -26,6 +26,11 @@ parameters:
     - custom_constraint: blazar.reservation
 
 resources:
+  control_node_floating_ip:
+    type: OS::Nova::FloatingIP
+    properties:
+      pool: ext-net
+
   control_node:
     type: OS::Nova::Server
     properties:
@@ -146,7 +151,7 @@ resources:
                 source openrc admin
                 # Configure DNS server
                 neutron subnet-update public-subnet --dns_nameservers list=true 8.8.8.8
-                neutron subnet-update private-subnet --dns_nameservers list=true 8.8.8.8
+                neutron subnet-update private-subnet --dns_nameservers list=true 192.168.1.2 8.8.8.8
                 # Add security group rule to allow ICMP, SSH, and HTTP
                 nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
                 nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
@@ -161,8 +166,15 @@ resources:
         runcmd:
           - cd /home/stack
           - pwd
+          - cp -r /home/cc/.ssh /home/stack/
+          - chown -R stack:stack /home/stack/.ssh
           - su -l stack ./start.sh
 
+  control_node_ip_association:
+    type: OS::Nova::FloatingIPAssociation
+    properties:
+      floating_ip: { get_resource: control_node_floating_ip }
+      server_id: { get_resource: control_node }
 
   compute_node:
     type: OS::Heat::ResourceGroup

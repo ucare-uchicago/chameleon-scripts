@@ -151,6 +151,11 @@ resources:
                 nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
                 nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
                 nova secgroup-add-rule default tcp 80 80 0.0.0.0/0
+                # Add security group demo-ssh for easy instantiation
+                openstack security group create demo-ssh
+                openstack security group rule create --ingress --protocol icmp demo-ssh
+                openstack security group rule create --ingress --dst-port 22 demo-ssh
+                openstack security group rule create --ingress --dst-port 80 demo-ssh
             path: /home/stack/start.sh
             permissions: 0755
         runcmd:

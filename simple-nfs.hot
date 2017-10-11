@@ -1,0 +1,86 @@
+# This describes what is deployed by this template.
+description: NFS server and clients deployed with Heat on Chameleon
+
+# This defines the minimum Heat version required by this template.
+heat_template_version: 2015-10-15
+
+# The resources section defines what OpenStack resources are to be deployed and
+# how they should be configured.
+resources:
+  nfs_server_floating_ip:
+    type: OS::Nova::FloatingIP
+    properties:
+      pool: ext-net
+
+  nfs_server:
+    type: OS::Nova::Server
+    properties:
+      name: NFS-Server
+      flavor: baremetal
+      image: CC-Ubuntu14.04
+      key_name: { get_param: key_name }
+      networks:
+         - network: sharednet1
+      scheduler_hints: { reservation: { get_param: reservation_id } }
+      user_data: |
+        #!/bin/bash
+        apt-get update
+        apt-get install -y nfs-kernel-server
+        mkdir -p /exports/example
+        chown -R cc:cc /exports
+        echo '/exports/example 10.140.80.0/22(rw,async) 10.40.0.0/23(rw,async)' >> /etc/exports
+        service nfs-kernel-server restart
+
+  nfs_server_ip_association:
+    type: OS::Nova::FloatingIPAssociation
+    properties:
+      floating_ip: { get_resource: nfs_server_floating_ip }
+      server_id: { get_resource: nfs_server }
+
+  nfs_clients:
+    type: OS::Heat::ResourceGroup
+    properties:
+      count: { get_param: compute_node_count }
+      resource_def:
+        type: OS::Nova::Server
+        properties:
+          name: Compute-Node-%index%
+          flavor: baremetal
+          image: CC-Ubuntu14.04
+          key_name: { get_param: key_name }
+          networks:
+             - network: sharednet1
+          scheduler_hints: { reservation: { get_param: reservation_id } }
+          user_data:
+            str_replace:
+              template: |
+                #!/bin/bash
+                apt-get install -y nfs-common 
+                mkdir -p /exports/example
+                chown -R cc:cc /exports
+                echo "$nfs_server_ip:/exports/example    /exports/example/    nfs" >> /etc/fstab
+                mount -a
+              params:
+                $nfs_server_ip: { get_attr: [nfs_server, first_address] }
+
+# The parameters section gathers configuration from the user.
+parameters:
+  key_name:
+    type: string
+    description: Name of a KeyPair to enable SSH access to the instance
+    default: default
+    constraints:
+    - custom_constraint: nova.keypair
+  reservation_id:
+    type: string
+    description: ID of the Blazar reservation to use for launching instances.
+    constraints:
+    - custom_constraint: blazar.reservation
+  compute_node_count:
+    type: number
+    label: Number of compute nodes
+    description: Number of compute nodes other than NFS server
+    default: 1
+    constraints:
+      - range: { min: 1 }
+        description: There must be at least one compute node.

@@ -1,0 +1,22 @@
+---
+provider:
+  type: chameleonbaremetal
+  key_name: 'ucare-chameleon'
+  lease_name: 'ucare-lease'
+  gateway: False
+  network: {name: sharednet1}
+  subnet: {'name': 'sharednet1-subnet'}
+resources:
+  compute:
+    control: 1
+    network: 1
+    compute: 5
+
+kolla: {openstack_release: 4.0.0}
+kolla_repo: "https://git.openstack.org/openstack/kolla-ansible"
+kolla_ref: "stable/ocata"
+
+
+# remember to override
+# /etc/kolla/neutron-server/ml2_conf.ini
+# /etc/kolla/neutron-server/neutron.conf

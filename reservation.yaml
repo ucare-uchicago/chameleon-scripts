@@ -6,11 +6,13 @@ provider:
   gateway: False
   network: {name: sharednet1}
   subnet: {'name': 'sharednet1-subnet'}
+  registry:
+    type: none
 resources:
   compute:
     control: 1
     network: 1
-    compute: 5
+    compute: 4
 
 kolla: {openstack_release: 4.0.0}
 kolla_repo: "https://git.openstack.org/openstack/kolla-ansible"

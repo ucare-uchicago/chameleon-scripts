@@ -2,8 +2,8 @@
 provider:
   type: chameleonbaremetal
   key_name: 'ucare-chameleon'
-  lease_name: 'ucare-lease'
-  gateway: False
+  lease_name: 'enos-lease'
+  gateway: True
   network: {name: sharednet1}
   subnet: {'name': 'sharednet1-subnet'}
   registry:
@@ -12,9 +12,17 @@ resources:
   compute:
     control: 1
     network: 1
-    compute: 4
+    compute: 1
 
-kolla: {openstack_release: 4.0.0}
+kolla:
+  openstack_release: 4.0.0
+  kolla_base_distro: "centos"
+  kolla_install_type: "source"
+  docker_namespace: "beyondtheclouds"
+  neutron_external_interface: eno1
+  neutron_plugin_agent: linuxbridge
+
+
 kolla_repo: "https://git.openstack.org/openstack/kolla-ansible"
 kolla_ref: "stable/ocata"
 

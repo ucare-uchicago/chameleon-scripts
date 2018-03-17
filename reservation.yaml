@@ -6,8 +6,6 @@ provider:
   gateway: True
   network: {name: sharednet1}
   subnet: {'name': 'sharednet1-subnet'}
-  registry:
-    type: none
 resources:
   compute:
     control: 1
@@ -22,10 +20,11 @@ kolla:
   neutron_external_interface: eno1
   neutron_plugin_agent: linuxbridge
 
-
 kolla_repo: "https://git.openstack.org/openstack/kolla-ansible"
 kolla_ref: "stable/ocata"
 
+registry:
+  type: none
 
 # remember to override
 # /etc/kolla/neutron-server/ml2_conf.ini

@@ -17,7 +17,8 @@ kolla:
   kolla_base_distro: "centos"
   kolla_install_type: "source"
   docker_namespace: "beyondtheclouds"
-  neutron_external_interface: eno1
+  network_interface: eno1
+  neutron_external_interface: eno2
   neutron_plugin_agent: linuxbridge
 
 kolla_repo: "https://git.openstack.org/openstack/kolla-ansible"

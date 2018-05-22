@@ -18,6 +18,7 @@ kolla:
   kolla_base_distro: "centos"
   kolla_install_type: "source"
   docker_namespace: "beyondtheclouds"
+  node_custom_config: /home/cc/enos-dev/chameleon-scripts/kolla-custom
 #  network_interface: eno1
 #  neutron_external_interface: eno2
 #  neutron_plugin_agent: linuxbridge

@@ -3,6 +3,7 @@ provider:
   type: chameleonbaremetal
   key_name: 'ucare-chameleon'
   lease_name: 'enos-lease'
+  image_name: 'CC-Ubuntu16.04-20180329'
   gateway: True
   network: {name: sharednet1}
   subnet: {'name': 'sharednet1-subnet'}
@@ -10,22 +11,24 @@ resources:
   compute:
     control: 1
     network: 1
-    compute: 1
+    compute: 5
 
 kolla:
-  openstack_release: 4.0.0
+  openstack_release: 5.0.0
   kolla_base_distro: "centos"
   kolla_install_type: "source"
   docker_namespace: "beyondtheclouds"
-  network_interface: eno1
-  neutron_external_interface: eno2
-  neutron_plugin_agent: linuxbridge
+#  network_interface: eno1
+#  neutron_external_interface: eno2
+#  neutron_plugin_agent: linuxbridge
 
 kolla_repo: "https://git.openstack.org/openstack/kolla-ansible"
-kolla_ref: "stable/ocata"
+kolla_ref: "stable/pike"
 
 registry:
   type: none
+
+#enable_monitoring: yes
 
 # remember to override
 # /etc/kolla/neutron-server/ml2_conf.ini

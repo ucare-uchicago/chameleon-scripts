@@ -23,6 +23,7 @@ cat << EOF > /tmp/setup-dotfiles.sh
 cd ~/
 git clone https://github.com/rizaon/dotfiles
 cd dotfiles
+git checkout emulab
 ./install
 EOF
 sudo -u cc bash /tmp/setup-dotfiles.sh
@@ -40,13 +41,14 @@ EOF
 sudo -u cc bash /tmp/install-ssh-key.sh
 
 # disable host check for localhost
-cat << EOF >> ~/.ssh/config
+cat << EOF >> /home/cc/.ssh/config
 
 Host localhost
   UserKnownHostsFile /dev/null
   StrictHostKeyChecking no
 
 EOF
+sudo chwon cc:cc /home/cc/.ssh/config
 
 ### install protobuf 2.5.0
 cat << EOF > /tmp/install-protobuf.sh
@@ -103,4 +105,15 @@ cp \$PSBIN/hadoop-etc/templates/dmck-hack/* \$HADOOP_CONF_DIR/
 ./sed_replaceconf.sh
 EOF
 sudo -u cc bash /tmp/install-psbin.sh
+
+
+#### misc
+sudo -u cc mkdir /home/cc/jenkins
+
+#### create backup user
+sudo useradd -m -s /bin/bash riza
+usermod -aG sudo riza
+echo "riza ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers > /dev/null
+sudo cp -r /home/cc/.ssh /home/riza/
+sudo chown -R riza:riza /home/riza/.ssh
 

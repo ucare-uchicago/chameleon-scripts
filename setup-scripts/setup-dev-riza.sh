@@ -48,7 +48,7 @@ Host localhost
   StrictHostKeyChecking no
 
 EOF
-sudo chwon cc:cc /home/cc/.ssh/config
+sudo chown -R cc:cc /home/cc/.ssh
 
 ### install protobuf 2.5.0
 cat << EOF > /tmp/install-protobuf.sh
